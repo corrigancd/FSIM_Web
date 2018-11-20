@@ -10,6 +10,7 @@
     <!--[if lte IE 8]>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
     <![endif]-->
+
     <style>
         html {
             height: 100%
@@ -23,29 +24,27 @@
             height: 100%
         }
     </style>
-    <link rel="stylesheet" href="gh-pages.css" />
+
 </head>
 
 <body>
-<div class="github-fork-ribbon-wrapper right">
-    <div class="github-fork-ribbon">
-        <a href="https://github.com/calvinmetcalf/leaflet.shapefile">Fork me on GitHub</a>
-    </div>
-</div>
+
 <div id="map"></div>
 <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
 <script src="javascript/catiline.js"></script>
-<script src="leaflet.shpfile.js"></script>
+<script src="javascript/leaflet.shpfile.js"></script>
 <script>
-    var m = L.map('map').setView([53.27, -9.06], 13);
-    var watercolor = L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg', {
-        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
-    }).addTo(m);
-    var shpfile = new L.Shapefile('congress.zip', {
-        onEachFeature: function(feature, layer) {
+    const map = L.map('map').setView([52.827794, -6.556206], 16); //   [42.09618442380296, -71.5045166015625], 8
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZWR3aW50Y29ycmlnYW4iLCJhIjoiY2pvbzd0ajFyMDFmeTNrc3V2eGJreG1nbiJ9.iWd5NIlki4oMBDdVSVxI6g', {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox.satellite',
+    }).addTo(map);
+    const shpfile = new L.Shapefile('spatial/CompartmentsWGS1984.zip', {
+        onEachFeature: function (feature, layer) {
             if (feature.properties) {
-
-                layer.bindPopup(Object.keys(feature.properties).map(function(k) {
+                console.log(feature);
+                layer.bindPopup(Object.keys(feature.properties).map(function (k) {
                     return k + ": " + feature.properties[k];
                 }).join("<br />"), {
                     maxHeight: 200
@@ -53,7 +52,7 @@
             }
         }
     });
-    shpfile.addTo(m);
+    shpfile.addTo(map);
     shpfile.once("data:loaded", function() {
         console.log("finished loaded shapefile");
     });
